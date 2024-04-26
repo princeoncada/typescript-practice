@@ -62,7 +62,7 @@ const tofrom = document.querySelector('#tofrom') as HTMLInputElement;
 const details = document.querySelector('#details') as HTMLInputElement;
 const amount = document.querySelector('#amount') as HTMLInputElement;
 ```
-- typescript creates classes similar to Kotlin where there is inital variables, constructors, and methods
+- typescript creates classes similar to `Kotlin` where there is inital `variables`, `constructors`, and `methods`
 ```
 class Invoice {
     client: string;
@@ -80,9 +80,68 @@ class Invoice {
     }
 }
 ```
-- you can use created classes for type declarations
+- you can use created `classes` for `type` declarations
 ```
 const arr: Invoice[] = [];
 ```
 - variables and methods can be modified with `private`, `public`, and `readonly` access modifiers
 - if variable is created together with access modifiers you can directly put it inside the constructor directly with initializing
+```
+class Invoice {
+    constructor(
+        readonly client: string,
+        private details: string,
+        public amount: number
+    ) {}
+
+    format() {
+        return `${this.client} owes $${this.amount} for ${this.details}`;
+    }
+}
+```
+- for module systems, keep 2 things in mind, add `export` after the `class` keyword and then retrieve it by referencing the `.ts` file as `.js`
+```
+export class Invoice() {}
+----------------------------------------------------------------
+// different directory
+import { Invoice } from './classes/Invoice.js';
+```
+- you can setup `interfaces` with similar structure to `Kotlin`
+```
+interface Person {
+    name: string;
+    age: number;
+    speak(a: string): void;
+    spend(a: number): number;
+}
+```
+- `interfaces` is simply the same as `Kotlin` or `Java`
+- `typescript` also makes use of `generics`
+- `generics` on `functions`, `interfaces`, and `classes`
+```
+function identity<T>(arg: T): T {
+    return arg;
+}
+
+interface GenericIdentityFn<T> {
+    (arg: T): T;
+}
+
+class GenericNumber<T> {
+    zeroValue: T;
+    add: (x: T, y: T) => T;
+}
+```
+- `constraints` can also be specified on `generics`
+```
+interface Lengthwise {
+    length: number;
+}
+
+function loggingIdentity<T extends Lengthwise>(arg: T): T {
+    console.log(arg.length);  // Now we know it has a .length property, so no more error
+    return arg;
+}
+
+loggingIdentity({length: 10, value: 3});
+```
