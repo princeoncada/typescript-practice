@@ -28,4 +28,9 @@ let object: {
 };
 ```
 - there is a dynamic type `any`
-
+- easy way to manage `typescript` processes is to run `tsc --init` to initialize a json configuration file
+- set `rootDir` and `outDir` to specify the root folder and output folder
+- add the following to the configuration to only include everything in src for compiling
+```
+"include": ["src"]
+```
