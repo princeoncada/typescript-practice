@@ -9,3 +9,5 @@ console.log(inputs);
 inputs.forEach(input => {
     console.log(input);
 })
+
+const numberValue: number = 123;
