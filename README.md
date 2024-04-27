@@ -1,147 +1,226 @@
-# Notes
+# TypeScript Learnings
 
-- typescript is not directly used and is compiled using `tsc` `{typescript filename}` or you can specify the javascript file to modify `tsc` `{typescript filename}` `{javascript filename}`
-- to avoid constantly having to run `tsc` to compile typescript files into javascript, simply include the tag -w (`tsc` `{typescript filename}` `-w`)
-- define the type of variable names explicity
+This repository contains my notes and examples from watching a [TypeScript Tutorial](https://www.youtube.com/playlist?list=PL4cUxeGkcC9gUgr39Q_yD6v-bSyMwKPUI) Series on YouTube. Below are the key concepts and code snippets that illustrate the fundamentals of TypeScript as covered in the videos.
+
+### Compiling TypeScript
+- Compile a TypeScript file to Javascript using:
+```
+tsc {typescript filename}
+```
+- To automatically compile files:
+```
+tsc {typescript filename} -w
+```
+
+### Basic Types
+- Declare types explicitly:
 ```
 const variable_name: number = 1;
 ```
-- there are single type arrays and mixed type arrays
+>#### Arrays
+>- Single type arrays:
+>```
+>let arr1: number[] = [1, 2, 3];
+>let arr2: string[] = ["one", "two", "three"];
+>```
+>- Mixed types arrays:
+>```
+>let arr3: (number|string)[] = [1, "two", 3];
+>```
+>
+>#### Objects
+>- Declared objects with strict type checking:
+>```
+>let object: {
+>   name: string,
+>   age: number,
+>   beltColour: string,
+>   isPresent: boolean
+>};
+>```
+>
+>#### Union Types
+>- Use union types to allow multiple types for variables:
+>```
+>let mixedArr: (string|number|boolean)[];
+>let uid: string|number;
+>```
+
+### Dynamic Type: `any`
+- Use `any` for a variable that can hold any type:
 ```
-let arr1 = [1, 2, 3]; // single type array of numbers
-let arr2 = ["one", "two", "three"]; // single type array of strings
-let arr3 = [1, "two", 3]; // mixed type array of numbers and strings
+let dynamicVar: any;
 ```
-- objects are more strict meaning modifications are only allowed based on the initial values and types
-- you can explicitly declare union types:
+
+### TypeScript Configuration
+- Initialize a TS project configuration file:
 ```
-let mixedArr: (string|number|boolean)[];
-let uid: string|number;
+tsc --init
 ```
-- you can also do it with objects
+- Set directories for source and compiled output:
 ```
-let object: {
-    name: string,
-    age: number,
-    beltColour: string,
-    isPresent: boolean
-};
-```
-- there is a dynamic type `any`
-- easy way to manage `typescript` processes is to run `tsc --init` to initialize a json configuration file
-- set `rootDir` and `outDir` to specify the root folder and output folder
-- add the following to the configuration to only include everything in src for compiling
-```
+{
+    "rootDir": "./src",
+    "outDir": "./public",
+},
 "include": ["src"]
 ```
-- you can also explicitly specifiy the data type of function parameters and its return type
+
+### Functions
+- Specify parameters and return types:
 ```
-function add(param1: number, param2: number): number{
-    return param1 + param2;
+function add(num1: number, num2: number): number {
+  return num1 + num2;
 }
 ```
-- you can create `type aliases` to be used for explicit typing
+
+### Type Aliases
+- Create reusable type definitions:
 ```
 type StringOrNum = string | number;
-let thisThing: StringOrNum = 12;
-let thatThing: StringOrNum = "twelve";
 ```
-- similar to creating types you can create `function signatures` for functions
+
+### Function Signatures
+- Define the structure of a function:
 ```
-let function1: (a: string, b: number) => void;
-function1 = (name: string, age: number) => {
-    console.log(`My name is {name} and age is ${age}`);
-}
+let calculate: (x: number, y: number) => number;
+calculate = (a, b) => a + b;
 ```
-- typescript does not have access to external files at runtime leading to the need to use of runtime check using `if-statements` or `! operator` ( used when a value is certainly present )
-- you can do type casting by adding `as {data type}` to an expression
-```
-const form = document.querySelector('.new-item-form') as HTMLFormElement;
-const type = document.querySelector('#type') as HTMLSelectElement;
-const tofrom = document.querySelector('#tofrom') as HTMLInputElement;
-const details = document.querySelector('#details') as HTMLInputElement;
-const amount = document.querySelector('#amount') as HTMLInputElement;
-```
-- typescript creates classes similar to `Kotlin` where there is inital `variables`, `constructors`, and `methods`
+
+### Class-based Features
+- Basic class structure:
 ```
 class Invoice {
-    client: string;
-    details: string;
-    amount: number;
+  client: string;
+  details: string;
+  amount: number;
 
-    constructor(c: string, d: string, a: number) {
-        this.client = c;
-        this.details = d;
-        this.amount = a;
-    }
+  constructor(c: string, d: string, a: number) {
+      this.client = c;
+      this.details = d;
+      this.amount = a;
+  }
 
-    format() {
-        return `${this.client} owes $${this.amount} for ${this.details}`;
-    }
+  format() {
+      return `${this.client} owes $${this.amount} for ${this.details}`;
+  }
 }
 ```
-- you can use created `classes` for `type` declarations
-```
-const arr: Invoice[] = [];
-```
-- variables and methods can be modified with `private`, `public`, and `readonly` access modifiers
-- if variable is created together with access modifiers you can directly put it inside the constructor directly with initializing
+
+### Access Modifiers
+- Use `private`, `public`, or `readonly` to control access to class members:
 ```
 class Invoice {
-    constructor(
-        readonly client: string,
-        private details: string,
-        public amount: number
-    ) {}
-
-    format() {
-        return `${this.client} owes $${this.amount} for ${this.details}`;
-    }
+  constructor(
+      public client: string,
+      private details: string,
+      readonly amount: number
+  ) {}
 }
 ```
-- for module systems, keep 2 things in mind, add `export` after the `class` keyword and then retrieve it by referencing the `.ts` file as `.js`
+
+### Modules
+- `Import` and `export` classes:
 ```
-export class Invoice() {}
-----------------------------------------------------------------
-// different directory
+// Exporting
+export class Invoice {}
+// Importing
 import { Invoice } from './classes/Invoice.js';
 ```
-- you can setup `interfaces` with similar structure to `Kotlin`
+
+### Interfaces
+- Define a contract for `classes` or `objects`:
 ```
 interface Person {
-    name: string;
-    age: number;
-    speak(a: string): void;
-    spend(a: number): number;
+  name: string;
+  age: number;
+  speak(words: string): void;
+  spend(amount: number): number;
 }
 ```
-- `interfaces` is simply the same as `Kotlin` or `Java`
-- `typescript` also makes use of `generics`
-- `generics` on `functions`, `interfaces`, and `classes`
+
+### Generics
+- Use `generics` to create `components` that work with various types:
 ```
 function identity<T>(arg: T): T {
-    return arg;
+  return arg;
 }
 
 interface GenericIdentityFn<T> {
-    (arg: T): T;
+  (arg: T): T;
 }
 
 class GenericNumber<T> {
-    zeroValue: T;
-    add: (x: T, y: T) => T;
+  zeroValue: T;
+  add: (x: T, y: T) => T;
 }
 ```
-- `constraints` can also be specified on `generics`
+- Apply constraints to `generics`:
 ```
 interface Lengthwise {
-    length: number;
+  length: number;
 }
 
 function loggingIdentity<T extends Lengthwise>(arg: T): T {
-    console.log(arg.length);  // Now we know it has a .length property, so no more error
-    return arg;
+  console.log(arg.length);
+  return arg;
 }
-
-loggingIdentity({length: 10, value: 3});
 ```
+
+### Enums
+- `Enums` or `enumerations` allows for defining a set of named constants. 
+
+>#### Numeric Enums
+>```
+>enum Direction {
+>  Up = 1,
+>  Down,
+>  Left,
+>  Right
+>}
+>```
+>- Up is initialized with 1. All following members are auto-incremented from that point on. In this example, Down will be 2, Left will be 3, and so on.
+>
+>#### String Enums
+>```
+>enum Direction {
+>  Up = "UP",
+>  Down = "DOWN",
+>  Left = "LEFT",
+>  Right = "RIGHT"
+>}
+>```
+>- `String` `enums` do not auto-increment and each member must be initialized with a string value.
+>
+>#### Accessing Enums
+>```
+>let dir: Direction = Direction.Up;
+>```
+>- `Enums` are useful when you need a set of options whose values are known at compile time.
+
+### Tuples
+- `Tuples` allow you to express an array with a fixed number of elements whose types are known
+
+>#### Basic Tuple
+>```
+>let person: [string, number];
+>person = ["John", 35];  // Correct
+>person = [35, "John"];  // Error: Type 'number' is not assignable >to type 'string'.
+>```
+>- Here, `person` is a tuple where the first element is a `string` and the second is a `number`.
+>
+>#### Tuples with Optional Elements
+>```
+>let address: [string, number, string?];
+>address = ["Park Lane", 123];  // OK
+>address = ["Park Lane", 123, "Optional Additional Info"];  // Also >OK
+>```
+>- `Tuples` can have optional elements, denoted by the `?`. This makes the element at that position optional.
+>
+>#### Rest Elements in Tuples
+>```
+>let scores: [string, ...number[]];
+>scores = ["Math", 98, 97, 85];
+>scores = ["English"];
+>```
+>- This `tuple` expects a `string` as the first element, followed by any `number` of number types, denoted by `...number[]`.
